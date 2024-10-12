@@ -13,3 +13,4 @@ serde = { version = "1.0.210", features = ["derive"] }
 tokio = { version = "1.40.0", features = ["full"] } 
 eframe = "*"
 egui = "*"
+lazy_static = "1.5.0"

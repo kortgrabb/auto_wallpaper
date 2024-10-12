@@ -2,43 +2,71 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
-#[derive(Debug, Deserialize)]
-#[allow(dead_code)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Config {
     pub general: GeneralConfig,
-    pub source: SourceConfig,
     pub time_of_day: Option<HashMap<String, String>>,
     pub categories: Option<HashMap<String, Vec<String>>>,
     pub monthly: Option<MonthlyConfig>,
-    pub display: DisplayConfig,
+    pub display: Option<DisplayConfig>,
+    pub logging: Option<LoggingConfig>,
 }
 
-#[derive(Debug, Deserialize)]
-#[allow(dead_code)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct GeneralConfig {
     pub interval: String,
     pub mode: String,
     pub screen_layout: String,
+    pub wallpapers: WallpaperConfig,
 }
 
-#[derive(Debug, Deserialize)]
-#[allow(dead_code)]
-pub struct SourceConfig {
+#[derive(Debug, Deserialize, Clone)]
+pub struct WallpaperConfig {
     pub directories: Vec<String>,
     pub extensions: Vec<String>,
 }
 
-#[derive(Debug, Deserialize)]
-#[allow(dead_code)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct MonthlyConfig {
     pub categories: HashMap<String, Vec<u32>>,
     pub wallpapers: HashMap<String, Vec<String>>,
 }
 
-#[derive(Debug, Deserialize)]
-#[allow(dead_code)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct DisplayConfig {
     pub scaling: String,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct LoggingConfig {
+    pub level: u8,
+    pub file: String,
+    pub log_to_file: bool,
+    pub log_to_console: bool,
+}
+
+impl Default for LoggingConfig {
+    fn default() -> Self {
+        Self {
+            level: 3,
+            file: "".to_string(),
+            log_to_file: false,
+            log_to_console: true,
+        }
+    }
+}
+
+// convert level to string
+impl LoggingConfig {
+    pub fn level(&self) -> String {
+        match self.level {
+            1 => "ERROR".to_string(),
+            2 => "WARN".to_string(),
+            3 => "INFO".to_string(),
+            4 => "DEBUG".to_string(),
+            _ => "UNKNOWN".to_string(),
+        }
+    }
 }
 
 impl Config {
