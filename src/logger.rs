@@ -1,4 +1,5 @@
-use egui::mutex::Mutex;
+use std::{io::Read, sync::Mutex};
+
 use lazy_static::lazy_static;
 
 use crate::config::LoggingConfig;
@@ -9,16 +10,17 @@ pub struct Logger {
 
 impl Logger {
     pub fn init(config: &LoggingConfig) -> Result<(), Box<dyn std::error::Error>> {
-        let mut logger = LOGGER.lock();
-        logger.config = config.clone(); // Clone here if necessary, or directly use a reference.
+        let mut logger = LOGGER.lock().unwrap();
+        logger.config = config.clone();
+
         Ok(())
     }
 
     pub fn log(message: &str, level: u8) {
-        let logger = LOGGER.lock();
+        let logger = LOGGER.lock().unwrap();
         if level <= logger.config.level {
             if logger.config.log_to_console {
-                println!("[{}] {}", logger.config.level(), message);
+                println!("[{}] {}", level, message);
             }
             if logger.config.log_to_file {
                 // log to file

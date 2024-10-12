@@ -1,33 +1,29 @@
-# General application settings
 [general]
-interval = "1s"              # Interval between wallpaper changes (supports "m", "h", "d" for minutes, hours, days)
-mode = "sequential"               # Wallpaper selection mode: "random", "sequential", "time_of_day", "category" or "monthly"
-screen_layout = "multi"       # Screen setup: "single", "multi" for multiple monitors
+interval = "30m"
+mode = "random"
+screen_layout = "multi"
 
 [general.wallpapers]
-directories = ["C:/Users/Timhe/Pictures/wallpapers/autumn"]  # List of directories to search for wallpapers
-extensions = ["jpg", "png", "jpeg"]   # Image file types to consider (some extensions will break the app)
-recursive = true                      # Whether to search directories recursively for images
+directories = ["C:/Users/Timhe/Pictures/wallpapers"]
+extensions = ["jpg", "png", "jpeg"]
+recursive = true
 
-# Time-of-day mode settings (choose specific wallpapers based on time of day)
 [time_of_day]
 morning = "/path/to/morning_wallpaper.jpg"
 afternoon = "/path/to/afternoon_wallpaper.jpg"
 evening = "/path/to/evening_wallpaper.jpg"
 night = "/path/to/night_wallpaper.jpg"
 
-# Category-based mode settings (rotate wallpapers based on categories)
 [categories]
-nature = ["/path/to/nature_wallpapers"]    # Directory of nature-related wallpapers
+nature = ["/path/to/nature_wallpapers"]
 space = ["/path/to/space_wallpapers"]
 tech = ["/path/to/tech_wallpapers"]
 
-# Monthly mode settings (change wallpapers based on the month)
 [monthly.categories]
-winter = [12, 1, 2]     # Winter months
-spring = [3, 4, 5]      # Spring months
-summer = [6, 7, 8]      # Summer months
-fall = [9, 10, 11]      # Fall months
+winter = [12, 1, 2]
+spring = [3, 4, 5]
+summer = [6, 7, 8]
+fall = [9, 10, 11]
 
 [monthly.wallpapers]
 winter = ["/path/to/winter_wallpapers"]
@@ -35,12 +31,12 @@ spring = ["/path/to/spring_wallpapers"]
 summer = ["/path/to/summer_wallpapers"]
 fall = ["/path/to/fall_wallpapers"]
 
-# Wallpaper display options
 [display]
-scaling = "fill"                # Wallpaper scaling method: "fill", "fit", "stretch", "center", "tile"
+scaling = "fill"
 
 [logging]
-level = 3                      # Log level: 0 (no logs), 1 (errors), 2 (info), 3 (debug)
-file = "C:/Users/Timhe/Pictures/wallpapers/wallpaper.log"  # Log file path
-log_to_file = true              # Whether to log to a file
-log_to_console = true           # Whether to log to the console
+level = 3
+file = ""
+log_to_file = true
+log_to_console = true
+        

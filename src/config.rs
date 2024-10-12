@@ -2,6 +2,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
+use std::path::Path;
 #[derive(Debug, Deserialize, Clone)]
 pub struct Config {
     pub general: GeneralConfig,
@@ -77,6 +78,58 @@ impl Config {
             let appdata_path = env::var("APPDATA").expect("APPDATA env variable is not set");
             format!("{}/wallpaperChanger/config.toml", appdata_path)
         };
+
+        if !Path::new(&config_path).exists() {
+            let default_config = r#"
+[general]
+interval = "30m"
+mode = "random"
+screen_layout = "multi"
+
+[general.wallpapers]
+directories = []
+extensions = ["jpg", "png", "jpeg"]
+recursive = true
+
+[time_of_day]
+morning = "/path/to/morning_wallpaper.jpg"
+afternoon = "/path/to/afternoon_wallpaper.jpg"
+evening = "/path/to/evening_wallpaper.jpg"
+night = "/path/to/night_wallpaper.jpg"
+
+[categories]
+nature = ["/path/to/nature_wallpapers"]
+space = ["/path/to/space_wallpapers"]
+tech = ["/path/to/tech_wallpapers"]
+
+[monthly.categories]
+winter = [12, 1, 2]
+spring = [3, 4, 5]
+summer = [6, 7, 8]
+fall = [9, 10, 11]
+
+[monthly.wallpapers]
+winter = ["/path/to/winter_wallpapers"]
+spring = ["/path/to/spring_wallpapers"]
+summer = ["/path/to/summer_wallpapers"]
+fall = ["/path/to/fall_wallpapers"]
+
+[display]
+scaling = "fill"
+
+[logging]
+level = 3
+file = ""
+log_to_file = true
+log_to_console = true
+            "#;
+
+            let config_path = Path::new(&config_path);
+            fs::create_dir_all(config_path.parent().unwrap())
+                .expect("Failed to create config directory");
+
+            fs::write(config_path, default_config).expect("Failed to write default config file");
+        }
 
         let config_raw = fs::read_to_string(config_path).expect("Failed to read config file");
         toml::from_str(&config_raw).expect("Failed to parse config file")
