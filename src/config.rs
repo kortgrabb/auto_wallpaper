@@ -80,8 +80,7 @@ impl Config {
         };
 
         if !Path::new(&config_path).exists() {
-            let default_config = r#"
-[general]
+            let default_config = r#"[general]
 interval = "30m"
 mode = "random"
 screen_layout = "multi"
@@ -121,8 +120,7 @@ scaling = "fill"
 level = 3
 file = ""
 log_to_file = true
-log_to_console = true
-            "#;
+log_to_console = true"#;
 
             let config_path = Path::new(&config_path);
             fs::create_dir_all(config_path.parent().unwrap())

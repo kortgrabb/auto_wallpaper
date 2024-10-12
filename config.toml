@@ -4,7 +4,7 @@ mode = "random"
 screen_layout = "multi"
 
 [general.wallpapers]
-directories = ["C:/Users/Timhe/Pictures/wallpapers"]
+directories = []
 extensions = ["jpg", "png", "jpeg"]
 recursive = true
 
@@ -39,4 +39,3 @@ level = 3
 file = ""
 log_to_file = true
 log_to_console = true
-        
