@@ -23,7 +23,7 @@ impl Logger {
                 println!("[{}] {}", level, message);
             }
             if logger.config.log_to_file {
-                // log to file
+                // TODO: implement file logging
             }
         }
     }

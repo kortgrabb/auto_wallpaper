@@ -1,12 +1,12 @@
 [general]
-interval = "30m"
-mode = "random"
-screen_layout = "multi"
+interval = "30m" # The interval at which the wallpaper should be changed
+mode = "sequential" # The mode to change the wallpaper (random, sequential, time_of_day, category, monthly)
+screen_layout = "multi" # The screen layout (multi, single)
 
 [general.wallpapers]
-directories = []
-extensions = ["jpg", "png", "jpeg"]
-recursive = true
+directories = ["C:/Users/Timhe/Pictures/wallpapers"] # The directories to search for wallpapers
+extensions = ["jpg", "png", "jpeg"] # The extensions to search for
+recursive = true # Search directories recursively
 
 [time_of_day]
 morning = "/path/to/morning_wallpaper.jpg"
@@ -19,8 +19,9 @@ nature = ["/path/to/nature_wallpapers"]
 space = ["/path/to/space_wallpapers"]
 tech = ["/path/to/tech_wallpapers"]
 
+# The months are represented as numbers
 [monthly.categories]
-winter = [12, 1, 2]
+winter = [12, 1, 2] 
 spring = [3, 4, 5]
 summer = [6, 7, 8]
 fall = [9, 10, 11]

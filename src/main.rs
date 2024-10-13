@@ -13,17 +13,17 @@ mod wallpaper_manager;
 #[tokio::main]
 async fn main() {
     let config = Config::load();
-    Logger::init(config.logging.as_ref().unwrap_or(&LoggingConfig::default()))
-        .expect("failed to initialize logger");
+    Logger::init(&config.logging).expect("failed to initialize logger");
 
     let interval = parse_interval(&config.general.interval).expect("invalid interval");
 
+    println!("running with interval: {:?}", interval);
     let mut timer = time::interval(interval);
     let mut wallpaper_manager = WallpaperManager::new();
 
     loop {
         timer.tick().await;
-        change_wallpaper(&config, &mut wallpaper_manager).await;
+        let _ = change_wallpaper(&config, &mut wallpaper_manager).await;
         Logger::log("Wallpaper changed", 3);
     }
 }

@@ -5,7 +5,6 @@ pub fn parse_interval(interval_str: &str) -> Option<Duration> {
     let unit = interval_str.chars().last()?;
 
     match unit {
-        's' => Some(Duration::from_secs(num)),
         'm' => Some(Duration::from_secs(num * 60)),
         'h' => Some(Duration::from_secs(num * 60 * 60)),
         'd' => Some(Duration::from_secs(num * 60 * 60 * 24)),
