@@ -1,4 +1,4 @@
-use config::{Config, LoggingConfig};
+use config::Config;
 use logger::Logger;
 use tokio::time;
 use utils::parse_interval;

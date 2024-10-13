@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::{config::WallpaperConfig, logger};
+use crate::config::WallpaperConfig;
 
 // Collect all of the images found in the dirs provided in the config
 pub fn collect_images(source: &WallpaperConfig) -> Vec<String> {

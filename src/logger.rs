@@ -1,4 +1,4 @@
-use std::{io::Read, sync::Mutex};
+use std::sync::Mutex;
 
 use lazy_static::lazy_static;
 

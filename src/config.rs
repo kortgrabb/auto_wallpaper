@@ -5,7 +5,6 @@ use std::env;
 use std::fs;
 use std::path::Path;
 
-use crate::logger::Logger;
 
 #[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Config {
