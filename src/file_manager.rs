@@ -24,3 +24,10 @@ pub fn collect_images(source: &WallpaperConfig) -> Vec<String> {
 
     images
 }
+
+pub fn get_or_create_file(file_path: &str) -> Result<fs::File, std::io::Error> {
+    fs::OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(file_path)
+}

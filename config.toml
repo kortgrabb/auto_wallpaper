@@ -1,6 +1,6 @@
 [general]
-interval = "30m" # The interval at which the wallpaper should be changed
-mode = "sequential" # The mode to change the wallpaper (random, sequential, time_of_day, category, monthly)
+interval = "1m" # The interval at which the wallpaper should be changed
+mode = "r" # The mode to change the wallpaper (random, sequential, time_of_day, category, monthly)
 screen_layout = "multi" # The screen layout (multi, single)
 
 [general.wallpapers]
@@ -36,7 +36,7 @@ fall = ["/path/to/fall_wallpapers"]
 scaling = "fill"
 
 [logging]
-level = 3
-file = ""
+level = "INFO" # The log level (SILENT, ERROR, WARNING, INFO, DEBUG)
+file = "logfile.log"
 log_to_file = true
 log_to_console = true

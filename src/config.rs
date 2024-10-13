@@ -5,7 +5,6 @@ use std::env;
 use std::fs;
 use std::path::Path;
 
-
 #[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct Config {
     pub general: GeneralConfig,
@@ -41,9 +40,18 @@ pub struct DisplayConfig {
     pub scaling: String,
 }
 
+#[derive(Debug, Deserialize, Clone, Serialize, PartialEq, PartialOrd)]
+pub enum LogLevel {
+    SILENT = 0,
+    ERROR = 1,
+    WARN = 2,
+    INFO = 3,
+    DEBUG = 4,
+}
+
 #[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct LoggingConfig {
-    pub level: u8,
+    pub level: LogLevel,
     pub file: String,
     pub log_to_file: bool,
     pub log_to_console: bool,
@@ -133,7 +141,7 @@ impl Default for DisplayConfig {
 impl Default for LoggingConfig {
     fn default() -> Self {
         Self {
-            level: 3,
+            level: LogLevel::ERROR,
             file: "".to_string(),
             log_to_file: false,
             log_to_console: true,
@@ -145,11 +153,11 @@ impl Default for LoggingConfig {
 impl LoggingConfig {
     pub fn level(&self) -> String {
         match self.level {
-            1 => "ERROR".to_string(),
-            2 => "WARN".to_string(),
-            3 => "INFO".to_string(),
-            4 => "DEBUG".to_string(),
-            _ => "UNKNOWN".to_string(),
+            LogLevel::SILENT => "SILENT".to_string(),
+            LogLevel::ERROR => "ERROR".to_string(),
+            LogLevel::WARN => "WARN".to_string(),
+            LogLevel::INFO => "INFO".to_string(),
+            LogLevel::DEBUG => "DEBUG".to_string(),
         }
     }
 }

@@ -1,8 +1,12 @@
 use std::sync::Mutex;
 
 use lazy_static::lazy_static;
+use std::io::Write;
 
-use crate::config::LoggingConfig;
+use crate::{
+    config::{LogLevel, LoggingConfig},
+    file_manager,
+};
 
 pub struct Logger {
     config: LoggingConfig,
@@ -16,14 +20,41 @@ impl Logger {
         Ok(())
     }
 
-    pub fn log(message: &str, level: u8) {
+    pub fn log(message: &str, level: LogLevel) {
         let logger = LOGGER.lock().unwrap();
         if level <= logger.config.level {
             if logger.config.log_to_console {
-                println!("[{}] {}", level, message);
+                println!("[{}] {}", logger.config.level(), message);
             }
             if logger.config.log_to_file {
                 // TODO: implement file logging
+                if logger.config.log_to_file {
+                    let log_file_name = &logger.config.file;
+                    let file = file_manager::get_or_create_file(log_file_name);
+
+                    match file {
+                        Ok(f) => {
+                            let date_format = chrono::Local::now().format("%Y-%m-%d %H:%M:%S");
+
+                            let mut file = f;
+                            if let Err(e) = writeln!(
+                                file,
+                                "{} - [{}] {}",
+                                date_format,
+                                logger.config.level(),
+                                message
+                            ) {
+                                eprintln!("Couldn't write to file: {}", e);
+                            }
+                        }
+                        Err(e) => {
+                            Logger::log(
+                                &format!("error reading or creating log file: {}", e),
+                                LogLevel::ERROR,
+                            );
+                        }
+                    }
+                }
             }
         }
     }
@@ -32,7 +63,7 @@ impl Logger {
 lazy_static! {
     pub static ref LOGGER: Mutex<Logger> = Mutex::new(Logger {
         config: LoggingConfig {
-            level: 0,
+            level: crate::config::LogLevel::SILENT,
             file: "".to_string(),
             log_to_file: false,
             log_to_console: true,

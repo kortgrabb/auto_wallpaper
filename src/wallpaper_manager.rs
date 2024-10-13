@@ -1,5 +1,5 @@
 use crate::{
-    config::{Config, WallpaperConfig},
+    config::{Config, LogLevel, WallpaperConfig},
     file_manager,
     logger::Logger,
 };
@@ -7,6 +7,7 @@ use rand::seq::SliceRandom;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
+// This is a lazy static variable that will store the images in memory
 lazy_static::lazy_static! {
     static ref IMAGE_CACHE: Mutex<HashMap<String, Vec<String>>> = Mutex::new(HashMap::new());
 }
@@ -29,19 +30,24 @@ impl WallpaperManager {
     }
 }
 
+// This function is used to change the wallpaper based on the mode specified in the config
 pub async fn change_wallpaper(
     config: &Config,
     wallpaper_manager: &mut WallpaperManager,
 ) -> Result<(), String> {
     match config.general.mode.as_str() {
-        "random" => select_random_wallpaper(&config.general.wallpapers)?,
-        "sequential" => select_sequential_wallpaper(&config.general.wallpapers, wallpaper_manager)?,
-        _ => Logger::log("Invalid mode", 1),
+        "random" | "r" => select_random_wallpaper(&config.general.wallpapers)?,
+        "sequential" | "s" => {
+            select_sequential_wallpaper(&config.general.wallpapers, wallpaper_manager)?
+        }
+        _ => Logger::log("Invalid mode", LogLevel::ERROR),
     }
+
+    Logger::log("Wallpaper changed", LogLevel::INFO);
+
     Ok(())
 }
 
-// This function is used to select a random image from the list
 fn select_random_wallpaper(source: &WallpaperConfig) -> Result<(), String> {
     let images = get_cached_images(source);
     let mut rng = rand::thread_rng();
@@ -49,12 +55,11 @@ fn select_random_wallpaper(source: &WallpaperConfig) -> Result<(), String> {
         set_wallpaper(image)?;
         Ok(())
     } else {
-        Logger::log("No images found", 1);
+        Logger::log("No images found", LogLevel::ERROR);
         Err("No images found".to_string())
     }
 }
 
-// This function is used to select the next image in the sequence
 fn select_sequential_wallpaper(
     source: &WallpaperConfig,
     wallpaper_manager: &mut WallpaperManager,
@@ -65,7 +70,7 @@ fn select_sequential_wallpaper(
         wallpaper_manager.update_index(images.len());
         Ok(())
     } else {
-        Logger::log("No images found", 1);
+        Logger::log("No images found", LogLevel::ERROR);
         Err("No images found".to_string())
     }
 }
@@ -75,6 +80,7 @@ fn get_cached_images(source: &WallpaperConfig) -> Vec<String> {
     let mut cache = IMAGE_CACHE.lock().unwrap();
     let dirs = source.directories.clone();
 
+    // If the cache is empty, read the images from the filesystem
     if cache.is_empty() {
         let images = file_manager::collect_images(source);
         for dir in &dirs {
@@ -82,19 +88,21 @@ fn get_cached_images(source: &WallpaperConfig) -> Vec<String> {
         }
     }
 
+    // Combine the images from all directories
     let mut images = Vec::new();
     for dir in &dirs {
         if let Some(dir_images) = cache.get(dir) {
             images.extend(dir_images.clone());
         }
     }
+
     images
 }
 
 fn set_wallpaper(image: &str) -> Result<(), String> {
-    Logger::log(&format!("Setting wallpaper: {}", image), 3);
+    Logger::log(&format!("Setting wallpaper: {}", image), LogLevel::INFO);
     if let Err(e) = wallpaper::set_from_path(image) {
-        Logger::log(&format!("Error setting wallpaper: {}", e), 1);
+        Logger::log(&format!("Error setting wallpaper: {}", e), LogLevel::ERROR);
         Err(e.to_string())
     } else {
         Ok(())

@@ -1,4 +1,4 @@
-use config::Config;
+use config::{Config, LogLevel};
 use logger::Logger;
 use tokio::time;
 use utils::parse_interval;
@@ -23,7 +23,11 @@ async fn main() {
 
     loop {
         timer.tick().await;
-        let _ = change_wallpaper(&config, &mut wallpaper_manager).await;
-        Logger::log("Wallpaper changed", 3);
+        if let Err(e) = change_wallpaper(&config, &mut wallpaper_manager).await {
+            Logger::log(
+                &format!("failed to change wallpaper: {}", e),
+                LogLevel::ERROR,
+            );
+        }
     }
 }
